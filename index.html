@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Chatbot Superhéroes Digitales</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f5f5f5;
+      margin: 0;
+      padding: 2rem;
+    }
+    h1 {
+      color: #222;
+      text-align: center;
+    }
+    #chat-container {
+      max-width: 600px;
+      margin: 0 auto;
+      background-color: white;
+      border-radius: 12px;
+      padding: 2rem;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      position: relative;
+    }
+    .category-btn {
+      margin: 0.5rem;
+      padding: 1rem;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      color: white;
+    }
+    .subcategory-btn {
+      margin: 0.3rem;
+      padding: 0.7rem;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      color: #222;
+      font-weight: bold;
+    }
+    #response {
+      margin-top: 1rem;
+      background-color: #eef;
+      padding: 1rem;
+      border-radius: 8px;
+    }
+    #whatsapp-btn {
+      display: inline-block;
+      margin-top: 2rem;
+      background-color: #25D366;
+      color: white;
+      padding: 1rem 2rem;
+      border-radius: 10px;
+      text-decoration: none;
+      font-size: 1.1rem;
+      font-weight: bold;
+    }
+    #avatar {
+      position: absolute;
+      top: -60px;
+      left: -60px;
+      width: 100px;
+      height: 100px;
+      background-image: url('https://cdn-icons-png.flaticon.com/512/4712/4712109.png');
+      background-size: cover;
+      border-radius: 50%;
+      box-shadow: 0 0 12px rgba(0, 0, 0, 0.3);
+    }
+    #avatar-text {
+      position: absolute;
+      top: 40px;
+      left: 50px;
+      background-color: #fff;
+      padding: 0.5rem 1rem;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+  <div id="chat-container">
+    <div id="avatar"></div>
+    <div id="avatar-text">¡Hola! Soy tu asistente digital 🤖</div>
+    <h1>🤖 Super Chatbot Educativo</h1>
+    <div id="categories"></div>
+    <div id="subcategories"></div>
+    <div id="response"></div>
+    <a id="whatsapp-btn" href="https://api.whatsapp.com/send?phone=5491166416777&text=solicito%20info" target="_blank">📲 Consultar con un asesor</a>
+  </div>
+
+  <audio id="introSound" autoplay>
+    <source src="https://www.myinstants.com/media/sounds/space-ambience.mp3" type="audio/mpeg">
+  </audio>
+
+  <script>
+    const categories = {
+      "Sobre el Curso": {
+        color: '#007BFF',
+        questions: [
+          ["¿Qué es la Diplomatura en Superpoderes Digitales?", "Es un programa educativo para niños y adolescentes donde aprenden a controlar objetos reales con IA y robótica."],
+          ["¿Cuánto dura cada curso?", "Cada curso tiene una duración de 2 meses y se entregan diplomas al aprobar cada nivel."],
+          ["¿Qué edades pueden participar?", "Está diseñado para jóvenes de 10 a 17 años."],
+          ["¿Qué se necesita para comenzar?", "Solo ganas de aprender. No es necesario tener conocimientos previos ni hardware propio."],
+          ["¿Quiénes dictan los cursos?", "Profesores expertos en robótica educativa e inteligencia artificial."]
+        ]
+      },
+      "Sobre la Tecnología": {
+        color: '#28A745',
+        questions: [
+          ["¿Qué es WebControl-IA?", "Es nuestro método exclusivo para controlar objetos reales desde páginas web usando IA."],
+          ["¿Se usa Arduino?", "Sí, trabajamos con Arduino, ESP8266 y ESP32 para proyectos reales."],
+          ["¿Se necesita instalar algo?", "No, todo se puede hacer desde una PC o celular usando laboratorios remotos."],
+          ["¿Qué herramientas se usan?", "Utilizamos ArduinoBlocks, Tinkercad, ChatGPT y plataformas de IoT como Adafruit."],
+          ["¿Se trabaja con placas reales?", "¡Sí! A través de nuestro laboratorio remoto."]
+        ]
+      },
+      "Sobre el Aprendizaje": {
+        color: '#FFC107',
+        questions: [
+          ["¿Hay certificaciones?", "Sí, al terminar cada curso se entrega un diploma digital oficial."],
+          ["¿Se aprende a programar?", "Sí, pero de forma visual y asistida por IA, ideal para principiantes."],
+          ["¿Puedo ver los proyectos de otros alumnos?", "Sí, tenemos muestras e inspiración compartida entre estudiantes."],
+          ["¿Qué tipo de proyectos se hacen?", "Desde prender luces y mover motores hasta crear servidores web embebidos."],
+          ["¿Se puede trabajar en equipo?", "Sí, hay desafíos colaborativos en línea."]
+        ]
+      },
+      "Sobre la Inscripción": {
+        color: '#DC3545',
+        questions: [
+          ["¿Cuánto cuesta el curso?", "Hay varias opciones desde $97 hasta $197 según el pack que elijas."],
+          ["¿Puedo pagar en cuotas?", "¡Sí! Todas las opciones pueden pagarse en cuotas sin interés."],
+          ["¿Cómo me inscribo?", "Puedes hablar directamente con nuestro asesor por WhatsApp."],
+          ["¿Cuándo empiezan las clases?", "Tenemos ciclos cada mes, puedes comenzar pronto."],
+          ["¿Hay ofertas especiales?", "Sí, contamos con un Pack Irresistible con beneficios exclusivos."]
+        ]
+      }
+    };
+
+    const categoriesDiv = document.getElementById("categories");
+    const subcategoriesDiv = document.getElementById("subcategories");
+    const responseDiv = document.getElementById("response");
+
+    function resetAll() {
+      subcategoriesDiv.innerHTML = "";
+      responseDiv.innerHTML = "";
+    }
+
+    Object.keys(categories).forEach(cat => {
+      const btn = document.createElement("button");
+      btn.className = "category-btn";
+      btn.style.backgroundColor = categories[cat].color;
+      btn.innerText = cat;
+      btn.onclick = () => {
+        resetAll();
+        categories[cat].questions.forEach(q => {
+          const subBtn = document.createElement("button");
+          subBtn.className = "subcategory-btn";
+          subBtn.style.backgroundColor = lightenColor(categories[cat].color, 50);
+          subBtn.innerText = q[0];
+          subBtn.onclick = () => {
+            responseDiv.innerHTML = `<strong>${q[0]}</strong><p>${q[1]}</p>`;
+          };
+          subcategoriesDiv.appendChild(subBtn);
+        });
+      };
+      categoriesDiv.appendChild(btn);
+    });
+
+    function lightenColor(hex, percent) {
+      let num = parseInt(hex.replace("#", ""), 16),
+        amt = Math.round(2.55 * percent),
+        R = (num >> 16) + amt,
+        G = (num >> 8 & 0x00FF) + amt,
+        B = (num & 0x0000FF) + amt;
+      return "rgb(" + (R<255?R:255) + "," + (G<255?G:255) + "," + (B<255?B:255) + ")";
+    }
+  </script>
+</body>
+</html>
